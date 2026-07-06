@@ -7,12 +7,21 @@ const WEEK_START = new Date(2026, 6, 5); // Sun 5 July 2026
 
 // Fixed prize per day of week (0 = Sun ... 5 = Fri). No Saturday.
 const REWARDS = {
-  0: { icon: '🎁🎁', label: '2 surprise bags' },
-  1: { icon: '🎁🎁🎁', label: '3 surprise bags' },
-  2: { icon: '🧸', label: 'A toy' },
-  3: { icon: '🎁🎁🎁🎁', label: '4 surprise bags' },
-  4: { icon: '🧸', label: 'A toy' },
-  5: { icon: '🧵', label: 'Filament' },
+  0: { label: '2 surprise bags' },
+  1: { label: '3 surprise bags' },
+  2: { label: 'A toy' },
+  3: { label: '4 surprise bags' },
+  4: { label: 'A toy' },
+  5: { label: 'Filament' },
+};
+
+// Themed icon shown on each day's stepping stone (0 = Sun ... 5 = Fri). Friday uses a CSS chest instead.
+const DAY_ICONS = {
+  0: '⭐',
+  1: '📖',
+  2: '⭐',
+  3: '🎧',
+  4: '🏋️',
 };
 
 const WEEK_LENGTH = 6; // Sun through Fri
@@ -83,8 +92,8 @@ function renderCountdown() {
 
 function renderDays() {
   const today = todayDate();
-  const listEl = el('days-list');
-  listEl.innerHTML = '';
+  const pathEl = el('days-path');
+  pathEl.innerHTML = '';
 
   for (let i = 0; i < WEEK_LENGTH; i++) {
     const date = new Date(WEEK_START);
@@ -94,25 +103,30 @@ function renderDays() {
     const reward = REWARDS[weekday];
     const isToday = date.getTime() === today.getTime();
     const isDone = !!completed[key];
+    const isFriday = weekday === 5;
 
-    const dateLabel = date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+    const dayLabel = date.toLocaleDateString(undefined, { weekday: 'short' });
+    const dateNum = date.getDate();
 
-    const card = document.createElement('div');
-    card.className = 'day-card';
-    if (isToday) card.classList.add('today');
-    if (isDone) card.classList.add('done');
+    const row = document.createElement('div');
+    row.className = 'stone-row';
 
-    card.innerHTML = `
-      <div class="day-icon">${isDone ? reward.icon : '❔'}</div>
-      <div class="day-info">
-        <div class="day-date">${dateLabel}${isToday ? ' · today' : ''}</div>
-        <div class="day-task">${isDone ? reward.label : 'Practice today to reveal your prize'}</div>
-      </div>
-      <div class="day-check">${isDone ? '✓' : ''}</div>
+    const stone = document.createElement('div');
+    stone.className = 'stone';
+    if (isToday) stone.classList.add('today');
+    if (isDone) stone.classList.add('done');
+
+    const iconHtml = isFriday ? '<div class="chest-icon"></div>' : DAY_ICONS[weekday];
+
+    stone.innerHTML = `
+      <div class="stone-icon">${iconHtml}</div>
+      <div class="stone-day">${dayLabel} ${dateNum}</div>
+      ${isDone ? '<div class="stone-check">✓</div>' : ''}
     `;
-    card.addEventListener('click', () => toggleDay(key, reward));
+    stone.addEventListener('click', () => toggleDay(key, reward));
 
-    listEl.appendChild(card);
+    row.appendChild(stone);
+    pathEl.appendChild(row);
   }
 }
 
