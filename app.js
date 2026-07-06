@@ -7,12 +7,12 @@ const WEEK_START = new Date(2026, 6, 5); // Sun 5 July 2026
 
 // Fixed prize per day of week (0 = Sun ... 5 = Fri). No Saturday.
 const REWARDS = {
-  0: { label: '2 surprise bags' },
-  1: { label: '3 surprise bags' },
-  2: { label: 'A toy' },
-  3: { label: '4 surprise bags' },
-  4: { label: 'A toy' },
-  5: { label: 'Filament' },
+  0: { label: '2 surprise bags', icon: '🎁' },
+  1: { label: '3 surprise bags', icon: '🎁' },
+  2: { label: 'A toy', icon: '🧸' },
+  3: { label: '4 surprise bags', icon: '🎁' },
+  4: { label: 'A toy', icon: '🧸' },
+  5: { label: 'Filament', icon: '🧵' },
 };
 
 // Themed icon shown on each day's stepping stone (0 = Sun ... 5 = Fri). Friday uses a CSS chest instead.
@@ -130,6 +130,26 @@ function renderDays() {
   }
 }
 
+function getLastPrize() {
+  let latestKey = null;
+  for (let i = 0; i < WEEK_LENGTH; i++) {
+    const date = new Date(WEEK_START);
+    date.setDate(date.getDate() + i);
+    const key = toKey(date);
+    if (completed[key]) latestKey = key;
+  }
+  if (!latestKey) return null;
+  const [y, m, d] = latestKey.split('-').map(Number);
+  const weekday = new Date(y, m - 1, d).getDay();
+  return REWARDS[weekday];
+}
+
+function renderLastPrize() {
+  const prize = getLastPrize();
+  el('last-prize-icon').textContent = prize ? prize.icon : '🎁';
+  el('last-prize-value').textContent = prize ? prize.label : 'Practice to win your first prize!';
+}
+
 function toggleDay(key, reward) {
   const wasDone = !!completed[key];
   if (wasDone) {
@@ -139,6 +159,7 @@ function toggleDay(key, reward) {
   }
   saveCompleted(completed);
   renderDays();
+  renderLastPrize();
 
   if (!wasDone) {
     showToast(`You revealed: ${reward.label}!`);
@@ -148,3 +169,4 @@ function toggleDay(key, reward) {
 buildOwl(el('owl-main'));
 renderCountdown();
 renderDays();
+renderLastPrize();

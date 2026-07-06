@@ -236,6 +236,36 @@ body {
   transform: translateX(-50%);
 }
 
+/* --- Last prize box --- */
+.last-prize-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--white);
+  border-radius: 18px;
+  padding: 16px 20px;
+  margin-top: 12px;
+  box-shadow: 0 6px 16px rgba(15, 110, 60, 0.1);
+}
+
+.last-prize-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.last-prize-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--green-darker);
+}
+
+#last-prize-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
 /* --- Toast --- */
 .toast {
   position: fixed;
