@@ -1,4 +1,4 @@
-const CACHE_NAME = 'violingo-v1';
+const CACHE_NAME = 'violingo-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +8,8 @@ const ASSETS = [
   './icon.svg',
   './icon-192.png',
   './icon-512.png',
+  './apple-touch-icon.png',
+  './favicon-32.png',
 ];
 
 self.addEventListener('install', (event) => {

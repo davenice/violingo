@@ -187,12 +187,62 @@ body {
   margin-top: 24px;
 }
 
+.practice-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.special-challenge {
+  flex: 0 0 110px;
+  background: var(--white);
+  border-radius: 18px;
+  padding: 16px 10px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(15, 110, 60, 0.1);
+}
+
+.special-challenge h2 {
+  font-size: 0.78rem;
+  color: var(--green-darker);
+  margin: 0 0 12px;
+}
+
+.challenge-emoji {
+  font-size: 3rem;
+  cursor: pointer;
+  transition: transform 0.08s ease;
+  line-height: 1;
+}
+
+.challenge-emoji:active {
+  transform: scale(0.9);
+}
+
+.challenge-stars {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 10px;
+  font-size: 1.3rem;
+}
+
+.challenge-star {
+  color: #d9f2e3;
+}
+
+.challenge-star.lit {
+  color: var(--gold);
+}
+
 .days-path {
   position: relative;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 26px;
   padding: 24px 12px;
+  min-width: 0;
 }
 
 .days-path::before {

@@ -41,21 +41,24 @@ function toKey(date) {
   return `${y}-${m}-${d}`;
 }
 
-function loadCompleted() {
+const MAX_CHALLENGE_STARS = 3;
+
+function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return {};
-    return JSON.parse(raw).completed || {};
+    if (!raw) return { completed: {}, challengeStars: 0 };
+    const parsed = JSON.parse(raw);
+    return { completed: parsed.completed || {}, challengeStars: parsed.challengeStars || 0 };
   } catch {
-    return {};
+    return { completed: {}, challengeStars: 0 };
   }
 }
 
-function saveCompleted(completed) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ completed }));
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ completed, challengeStars }));
 }
 
-let completed = loadCompleted();
+let { completed, challengeStars } = loadState();
 
 function buildOwl(container) {
   container.innerHTML = `
@@ -157,7 +160,7 @@ function toggleDay(key, reward) {
   } else {
     completed[key] = true;
   }
-  saveCompleted(completed);
+  saveState();
   renderDays();
   renderLastPrize();
 
@@ -166,10 +169,39 @@ function toggleDay(key, reward) {
   }
 }
 
+function renderChallenge() {
+  const starsEl = el('challenge-stars');
+  starsEl.innerHTML = '';
+  for (let i = 0; i < MAX_CHALLENGE_STARS; i++) {
+    const span = document.createElement('span');
+    span.className = 'challenge-star' + (i < challengeStars ? ' lit' : '');
+    span.textContent = i < challengeStars ? '★' : '☆';
+    starsEl.appendChild(span);
+  }
+}
+
+function tickChallengeStar() {
+  if (challengeStars >= MAX_CHALLENGE_STARS) return;
+  challengeStars++;
+  saveState();
+  renderChallenge();
+  showToast('Special challenge star earned!');
+}
+
+function clearChallengeStars() {
+  challengeStars = 0;
+  saveState();
+  renderChallenge();
+  showToast('Special challenge cleared');
+}
+
 buildOwl(el('owl-main'));
 renderCountdown();
 renderDays();
 renderLastPrize();
+renderChallenge();
+el('challenge-emoji').addEventListener('click', tickChallengeStar);
+el('challenge-emoji').addEventListener('dblclick', clearChallengeStars);
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
