@@ -1,0 +1,212 @@
+:root {
+  --green: #2fbf71;
+  --green-dark: #1e9c59;
+  --green-darker: #0f6e3c;
+  --paper: #eafff1;
+  --ink: #123524;
+  --gold: #f4c542;
+  --gold-dark: #c99a1e;
+  --white: #ffffff;
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.screen {
+  min-height: 100vh;
+  padding: 24px 16px 60px;
+}
+
+#main-screen {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 16px 20px;
+  box-shadow: 0 6px 20px rgba(15, 110, 60, 0.12);
+}
+
+.topbar-text h1 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--green-darker);
+}
+
+.countdown {
+  margin: 2px 0 0;
+  font-weight: 700;
+  color: var(--gold-dark);
+  font-size: 1rem;
+}
+
+/* --- Owl mascot, drawn with CSS --- */
+.owl-wrap.small { width: 56px; height: 56px; flex-shrink: 0; }
+
+.owl {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.owl::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--green);
+  border-radius: 50% 50% 45% 45%;
+}
+
+.owl::after {
+  content: "";
+  position: absolute;
+  top: 22%;
+  left: 12%;
+  right: 12%;
+  bottom: 8%;
+  background: #f2fff6;
+  border-radius: 50% 50% 45% 45%;
+}
+
+.owl-eye {
+  position: absolute;
+  top: 32%;
+  width: 26%;
+  height: 30%;
+  background: var(--white);
+  border: 2px solid var(--green-darker);
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.owl-eye::after {
+  content: "";
+  position: absolute;
+  inset: 28%;
+  background: var(--green-darker);
+  border-radius: 50%;
+}
+
+.owl-eye.left { left: 16%; }
+.owl-eye.right { right: 16%; }
+
+.owl-beak {
+  position: absolute;
+  top: 62%;
+  left: 50%;
+  width: 18%;
+  height: 12%;
+  background: var(--gold);
+  border-radius: 40%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+/* --- Days list --- */
+.days-section h2 {
+  color: var(--green-darker);
+  font-size: 1rem;
+  margin: 20px 4px 8px;
+}
+
+.days-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.day-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--white);
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(15, 110, 60, 0.08);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.05s ease;
+}
+
+.day-card:active { transform: scale(0.98); }
+
+.day-card.today {
+  border-color: var(--gold);
+}
+
+.day-card.done {
+  background: #e6faed;
+}
+
+.day-icon {
+  font-size: 1.4rem;
+  min-width: 40px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.day-info { flex: 1; }
+
+.day-date {
+  font-size: 0.78rem;
+  color: #4b6b5a;
+  font-weight: 600;
+}
+
+.day-task {
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.day-check {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #cdeedb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  background: var(--paper);
+}
+
+.day-card.done .day-check {
+  background: var(--green);
+  border-color: var(--green-dark);
+  color: white;
+}
+
+/* --- Toast --- */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--green-darker);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  z-index: 10;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 10px);
+}
