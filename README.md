@@ -32,8 +32,16 @@ npm run dev:emulator
 npm run seed:emulator
 ```
 
-Sign-in links aren't emailed by the emulator — fetch them from
-`http://127.0.0.1:9099/emulator/v1/projects/violingo-rules-test/oobCodes`.
+Sign-in links aren't emailed by the emulator. Request one at
+`http://localhost:3000/login`, then print it with:
+
+```bash
+node scripts/signin-link.mjs
+```
+
+Open the link in the same browser you requested it from. Note that emulator
+data is in-memory — accounts and practice history reset when the emulators
+restart.
 
 ## Tests
 
