@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // parents/{parentUid} — doc ID is the owning Firebase Auth uid.
+    match /parents/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // children/{childId} — parentId field ties the child back to its owning account.
+    // No separate child credential exists (see plan: single shared-device account,
+    // child/parent mode is an app-level PIN gate, not a Firestore permission boundary).
+    match /children/{childId} {
+      allow read, update, delete: if request.auth != null &&
+        request.auth.uid == resource.data.parentId;
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.parentId;
+    }
+
+    // practiceLog and sidequests subcollections inherit access from the parent child doc.
+    match /children/{childId}/{document=**} {
+      allow read, write: if request.auth != null &&
+        request.auth.uid ==
+          get(/databases/$(database)/documents/children/$(childId)).data.parentId;
+    }
+  }
+}
