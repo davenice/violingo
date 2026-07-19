@@ -37,37 +37,46 @@ const ChildContext = createContext<ChildContextValue>({
 
 export function ChildProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
-  const [parentDoc, setParentDoc] = useState<ParentDoc | null>(null);
-  const [parentDocLoading, setParentDocLoading] = useState(true);
-  const [childDoc, setChildDoc] = useState<ChildDoc | null>(null);
-  const [childDocLoading, setChildDocLoading] = useState(true);
+  // Docs are stored with the identity they belong to, and presence is sticky:
+  // once a doc has been seen for this uid/childId, a later "absent" reading
+  // from the subscription is ignored (kept as last-known data) — a transient
+  // backend blip must never bounce a signed-in family back to onboarding.
+  // Genuine absence (doc never seen, e.g. pre-onboarding) still reads as null.
+  const [parentState, setParentState] = useState<{ uid: string; doc: ParentDoc | null } | null>(
+    null,
+  );
+  const [childState, setChildState] = useState<{ childId: string; doc: ChildDoc | null } | null>(
+    null,
+  );
   const [mode, setModeState] = useState<Mode>(readStoredMode);
 
-  // Subscriptions only ever setState from within the onSnapshot callback; the
-  // "no user" / "no child" cases are handled by deriving `parent`/`child`
-  // below rather than resetting state synchronously in the effect body.
   useEffect(() => {
     if (!user) return;
-    return subscribeToDoc<ParentDoc>(db, `parents/${user.uid}`, (data) => {
-      setParentDoc(data);
-      setParentDocLoading(false);
+    const uid = user.uid;
+    return subscribeToDoc<ParentDoc>(db, `parents/${uid}`, (data) => {
+      setParentState((prev) => {
+        const prevDoc = prev?.uid === uid ? prev.doc : null;
+        return { uid, doc: data ?? prevDoc };
+      });
     });
   }, [user]);
 
-  const parent = user ? parentDoc : null;
-  const parentLoading = authLoading || (!!user && parentDocLoading);
+  const parent = user && parentState?.uid === user.uid ? parentState.doc : null;
+  const parentLoading = authLoading || (!!user && parentState?.uid !== user.uid);
   const childId = parent?.childId ?? null;
 
   useEffect(() => {
     if (!childId) return;
     return subscribeToDoc<ChildDoc>(db, `children/${childId}`, (data) => {
-      setChildDoc(data);
-      setChildDocLoading(false);
+      setChildState((prev) => {
+        const prevDoc = prev?.childId === childId ? prev.doc : null;
+        return { childId, doc: data ?? prevDoc };
+      });
     });
   }, [childId]);
 
-  const child = childId ? childDoc : null;
-  const loading = parentLoading || (!!childId && childDocLoading);
+  const child = childId && childState?.childId === childId ? childState.doc : null;
+  const loading = parentLoading || (!!childId && childState?.childId !== childId);
 
   function setMode(next: Mode) {
     setModeState(next);

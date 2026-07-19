@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ChildProvider } from "@/hooks/useChild";
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,6 +18,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Violingo",
   description: "A violin practice companion for a weekly streak, lives, and sidequests.",
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "Violingo" },
+  icons: { apple: "/apple-touch-icon.png" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#2fbf71",
 };
 
 export default function RootLayout({
@@ -33,6 +40,7 @@ export default function RootLayout({
         <AuthProvider>
           <ChildProvider>{children}</ChildProvider>
         </AuthProvider>
+        <ServiceWorkerRegistration />
       </body>
     </html>
   );

@@ -53,6 +53,24 @@ restart.
   onboarding → PIN gate). Needs the emulators and `npm run dev:emulator`
   running, plus `npx playwright install chromium` once.
 
+## Weekly rollover (Cloud Function)
+
+`functions/` holds a scheduled function (`weeklyRollover`, hourly) that
+finalizes each fully-elapsed week per child: streak increment/break, life
+banking from surplus, and automatic life-spending to save a missed week. It
+reuses the exact `lib/domain` logic (esbuild inlines it at build time) and is
+idempotent, with multi-week catch-up.
+
+Deploying requires the Firebase project to be on the **Blaze plan** (Google
+requires billing for any Cloud Functions deploy; actual cost at this usage is
+zero). One-time setup, then deploy:
+
+```bash
+npx firebase login                     # authenticate the CLI
+# upgrade the project to Blaze in the Firebase console first, then:
+npx firebase deploy --only functions
+```
+
 ## Layout
 
 - `lib/domain/` — pure, framework-free game logic (dates, streak, lives,

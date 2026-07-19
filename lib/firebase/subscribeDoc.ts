@@ -1,53 +1,61 @@
 import { doc, getDocFromServer, onSnapshot, type Firestore } from "firebase/firestore";
 
-const RECHECK_DELAYS_MS = [150, 400, 800];
+const CONFIRM_DELAYS_MS = [0, 300, 1000];
 
 function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return ms === 0 ? Promise.resolve() : new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
- * Subscribes to a document, treating a "document disappeared" reading with
- * suspicion: it is re-verified with a few short, growing-delay retries
- * against the server before being trusted. A genuine deletion is still
- * reflected (after ~1s worst case), but a transient false negative — as the
- * Firestore emulator's streaming transport produces for just-created docs
- * (firebase/firebase-tools#3867; primary mitigation is forcing long-polling
- * in client.ts) — never bounces the UI back to a logged-out/onboarding state.
+ * Subscribes to a document, treating any "document doesn't exist" reading as
+ * suspect: presence is reported immediately (cached or live), but absence is
+ * only reported after a server read confirms it (or the server is
+ * unreachable, when the cached truth is the best available). This shields the
+ * app from the Firestore emulator's phantom not-exists snapshots for
+ * just-created docs (firebase/firebase-tools#3867) — which occur even with
+ * long-polling forced and, if persisted, would poison reloads — at the cost
+ * of one extra server read when a doc is genuinely absent.
  */
 export function subscribeToDoc<T>(
   db: Firestore,
   path: string,
   onData: (data: T | null) => void,
 ): () => void {
-  let sawDoc = false;
   let cancelled = false;
+  let confirming = false;
   const ref = doc(db, path);
 
-  async function reverify() {
-    for (const ms of RECHECK_DELAYS_MS) {
-      await delay(ms);
-      if (cancelled) return;
-      const recheck = await getDocFromServer(ref);
-      if (recheck.exists()) {
-        onData(recheck.data() as T);
-        return;
+  async function confirmAbsence() {
+    if (confirming) return;
+    confirming = true;
+    try {
+      for (const ms of CONFIRM_DELAYS_MS) {
+        await delay(ms);
+        if (cancelled) return;
+        try {
+          const snap = await getDocFromServer(ref);
+          if (cancelled) return;
+          if (snap.exists()) {
+            onData(snap.data() as T);
+            return;
+          }
+        } catch {
+          // Server unreachable (offline): the cached absence is the best truth.
+          break;
+        }
       }
+      if (!cancelled) onData(null);
+    } finally {
+      confirming = false;
     }
-    if (!cancelled) onData(null);
   }
 
   const unsubscribe = onSnapshot(ref, (snap) => {
     if (snap.exists()) {
-      sawDoc = true;
       onData(snap.data() as T);
       return;
     }
-    if (!sawDoc) {
-      onData(null);
-      return;
-    }
-    void reverify();
+    void confirmAbsence();
   });
 
   return () => {

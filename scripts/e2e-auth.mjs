@@ -89,7 +89,7 @@ try {
   await page.locator('input[inputmode="numeric"]').fill("1234");
   await page.getByRole("button", { name: "Unlock" }).click();
   await page.waitForSelector("text=Parent settings", { timeout: 10000 });
-  await page.waitForSelector("text=Signed in as parent of", { timeout: 10000 });
+  await page.waitForSelector("text=Settings for", { timeout: 10000 });
   record("9. correct PIN unlocks parent dashboard", true);
   await shot(page, "parent-dashboard");
 
