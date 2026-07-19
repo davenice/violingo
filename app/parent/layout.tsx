@@ -51,7 +51,7 @@ export default function ParentLayout({ children }: { children: ReactNode }) {
           <button
             type="submit"
             disabled={checking || pin.length !== 4}
-            className="rounded-lg bg-violet-600 px-4 py-2 font-medium text-white disabled:opacity-50"
+            className="rounded-lg bg-plum-600 px-4 py-2 font-medium text-white disabled:opacity-50"
           >
             Unlock
           </button>

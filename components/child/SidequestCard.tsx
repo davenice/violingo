@@ -60,10 +60,10 @@ export function SidequestCard({
         <p className="mt-1 text-sm text-emerald-700">All sidequests complete — amazing! 🎉</p>
       ) : (
         active && (
-          <div className="mt-2 flex items-center justify-between rounded-xl bg-amber-50 p-3">
+          <div className="mt-2 flex items-center justify-between rounded-xl bg-coral-50 p-3">
             <div>
-              <p className="font-medium text-amber-900">{active.name}</p>
-              {active.description && <p className="text-xs text-amber-700">{active.description}</p>}
+              <p className="font-medium text-coral-800">{active.name}</p>
+              {active.description && <p className="text-xs text-coral-700">{active.description}</p>}
             </div>
             <Stars earned={active.starsEarned} />
           </div>
@@ -77,7 +77,7 @@ export function SidequestCard({
           className={`mt-3 w-full rounded-xl px-4 py-2 text-sm font-medium transition-colors disabled:opacity-40 ${
             todayTagged
               ? "bg-emerald-100 text-emerald-800"
-              : "bg-amber-400 text-amber-950 hover:bg-amber-300"
+              : "bg-coral-400 text-white hover:bg-coral-500"
           }`}
         >
           {todayTagged

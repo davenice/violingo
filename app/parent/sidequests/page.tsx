@@ -14,7 +14,7 @@ export default function ParentSidequestsPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4">
-      <Link href="/parent" className="text-sm text-violet-600 underline">
+      <Link href="/parent" className="text-sm text-plum-600 underline">
         ← Back
       </Link>
 

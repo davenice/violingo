@@ -119,7 +119,7 @@ export default function OnboardingPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-violet-600 px-4 py-2 font-medium text-white disabled:opacity-50"
+          className="rounded-lg bg-plum-600 px-4 py-2 font-medium text-white disabled:opacity-50"
         >
           Start practicing
         </button>

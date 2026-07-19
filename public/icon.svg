@@ -1,10 +1,25 @@
-<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="256" cy="256" r="256" fill="#2fbf71"/>
-  <ellipse cx="256" cy="285" rx="175" ry="185" fill="#f2fff6"/>
-  <circle cx="185" cy="245" r="62" fill="#ffffff" stroke="#0f6e3c" stroke-width="10"/>
-  <circle cx="185" cy="245" r="20" fill="#0f6e3c"/>
-  <circle cx="327" cy="245" r="62" fill="#ffffff" stroke="#0f6e3c" stroke-width="10"/>
-  <circle cx="327" cy="245" r="20" fill="#0f6e3c"/>
-  <ellipse cx="256" cy="345" rx="42" ry="26" fill="#f4c542"/>
-  <text x="345" y="430" font-size="170" text-anchor="middle" transform="rotate(20 345 430)">🎻</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#6b3fa0"/>
+  <g transform="translate(76 76) scale(3)">
+    <polygon points="22,44 40,8 54,38" fill="#d96c2c"/>
+    <polygon points="98,44 80,8 66,38" fill="#d96c2c"/>
+    <polygon points="30,40 40,18 48,36" fill="#8f4218"/>
+    <polygon points="90,40 80,18 72,36" fill="#8f4218"/>
+    <path d="M18 44 Q60 24 102 44 Q104 76 60 106 Q16 76 18 44 Z" fill="#e0702f"/>
+    <path d="M34 70 Q60 58 86 70 Q84 92 60 102 Q36 92 34 70 Z" fill="#fff7ed"/>
+    <circle cx="30" cy="64" r="6" fill="#ff8b6b" opacity="0.55"/>
+    <circle cx="90" cy="64" r="6" fill="#ff8b6b" opacity="0.55"/>
+    <circle cx="44" cy="56" r="4.5" fill="#362053"/>
+    <circle cx="76" cy="56" r="4.5" fill="#362053"/>
+    <circle cx="45.5" cy="54.5" r="1.5" fill="#fff7ed"/>
+    <circle cx="77.5" cy="54.5" r="1.5" fill="#fff7ed"/>
+    <circle cx="60" cy="76" r="5" fill="#362053"/>
+    <path d="M52 86 Q60 92 68 86" stroke="#362053" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <g transform="translate(92 88) rotate(32)">
+      <rect x="-1.6" y="-28" width="3.2" height="18" rx="1.6" fill="#4a3320"/>
+      <circle cx="0" cy="-29" r="3" fill="#4a3320"/>
+      <path d="M-8 -6 Q-10 -12 -5 -12 Q0 -12 0 -8 Q0 -12 5 -12 Q10 -12 8 -6 Q6 -1 8 4 Q10 12 0 12 Q-10 12 -8 4 Q-6 -1 -8 -6 Z" fill="#8a5a33"/>
+      <line x1="0" y1="-12" x2="0" y2="10" stroke="#e8d8b0" stroke-width="1.2"/>
+    </g>
+  </g>
 </svg>

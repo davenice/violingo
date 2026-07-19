@@ -7,9 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "A violin practice companion — weekly streaks, lives, and sidequests.",
     start_url: "/",
     display: "standalone",
-    // Prototype palette for now; the rebrand phase swaps these with the icons.
-    background_color: "#eafff1",
-    theme_color: "#2fbf71",
+    background_color: "#fff7ed",
+    theme_color: "#6b3fa0",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { src: "/icon-512.png", sizes: "512x512", type: "image/png" },

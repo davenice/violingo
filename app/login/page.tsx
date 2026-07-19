@@ -116,7 +116,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={status === "sending" || status === "completing"}
-          className="rounded-lg bg-violet-600 px-4 py-2 font-medium text-white disabled:opacity-50"
+          className="rounded-lg bg-plum-600 px-4 py-2 font-medium text-white disabled:opacity-50"
         >
           {needsEmail ? "Confirm and sign in" : "Email me a sign-in link"}
         </button>

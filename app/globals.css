@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fff7ed; /* cream */
+  --foreground: #3b2b4a; /* deep plum-ink */
 }
 
 @theme inline {
@@ -10,17 +10,31 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Fiddle the Fox palette: plum primary, coral accent, cream ground */
+  --color-plum-50: #f6f1fb;
+  --color-plum-100: #ebe1f6;
+  --color-plum-200: #d5bfec;
+  --color-plum-400: #9a6cc4;
+  --color-plum-600: #6b3fa0;
+  --color-plum-700: #593389;
+  --color-plum-800: #472a6e;
+  --color-plum-900: #362053;
+
+  --color-coral-50: #fff1ec;
+  --color-coral-100: #ffe2d7;
+  --color-coral-200: #ffc7b3;
+  --color-coral-400: #ff8b6b;
+  --color-coral-500: #f76f4d;
+  --color-coral-700: #c2492e;
+  --color-coral-800: #99361f;
+
+  --color-cream: #fff7ed;
+  --color-cream-deep: #fdefdb;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }

@@ -23,7 +23,7 @@ export default function ParentSettingsPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-6">
-      <Link href="/parent" className="text-sm text-violet-600 underline">
+      <Link href="/parent" className="text-sm text-plum-600 underline">
         ← Back
       </Link>
 

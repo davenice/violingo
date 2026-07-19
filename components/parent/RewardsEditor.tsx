@@ -62,7 +62,7 @@ export function RewardsEditor({ childId, rewardsByWeekday, onSaved }: RewardsEdi
         type="button"
         disabled={saving}
         onClick={handleSave}
-        className="mt-2 self-start rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+        className="mt-2 self-start rounded-lg bg-plum-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
       >
         Save rewards
       </button>

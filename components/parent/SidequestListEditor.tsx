@@ -55,7 +55,7 @@ function QuestRow({
   return (
     <li
       className={`flex items-center gap-2 rounded-xl border p-2 ${
-        isActive ? "border-amber-300 bg-amber-50" : "border-zinc-200"
+        isActive ? "border-coral-200 bg-coral-50" : "border-zinc-200"
       } ${completed ? "opacity-60" : ""}`}
     >
       <div className="flex flex-col">
@@ -96,7 +96,7 @@ function QuestRow({
       <span className="text-sm" aria-label={`${quest.starsEarned} of 3 stars`}>
         {completed ? "🏅" : `${quest.starsEarned}⭐`}
       </span>
-      {isActive && <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs">active</span>}
+      {isActive && <span className="rounded-full bg-coral-100 px-2 py-0.5 text-xs">active</span>}
       <button
         type="button"
         disabled={busy}
@@ -176,7 +176,7 @@ export function SidequestListEditor({
         <button
           type="submit"
           disabled={busy || !newName.trim()}
-          className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+          className="rounded-lg bg-plum-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
         >
           Add
         </button>

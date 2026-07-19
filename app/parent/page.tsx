@@ -18,7 +18,7 @@ export default function ParentDashboardPage() {
 
       <Link
         href="/parent/settings"
-        className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm hover:border-violet-300"
+        className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm hover:border-plum-200"
       >
         <h2 className="font-semibold">Practice & lives</h2>
         <p className="mt-1 text-sm text-zinc-500">
@@ -29,7 +29,7 @@ export default function ParentDashboardPage() {
 
       <Link
         href="/parent/sidequests"
-        className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm hover:border-violet-300"
+        className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm hover:border-plum-200"
       >
         <h2 className="font-semibold">Sidequests</h2>
         <p className="mt-1 text-sm text-zinc-500">

@@ -31,7 +31,7 @@ export function WeekPath({
         <h2 className="font-semibold">This week</h2>
         <span
           className={`rounded-full px-3 py-1 text-sm font-medium ${
-            count >= target ? "bg-emerald-100 text-emerald-800" : "bg-violet-100 text-violet-800"
+            count >= target ? "bg-emerald-100 text-emerald-800" : "bg-plum-100 text-plum-800"
           }`}
         >
           {count >= target ? "🚩 Target hit!" : `${count} of ${target} 🚩`}
@@ -58,7 +58,7 @@ export function WeekPath({
                 practiced
                   ? "border-emerald-400 bg-emerald-50"
                   : isToday
-                    ? "border-violet-400 bg-violet-50"
+                    ? "border-plum-400 bg-plum-50"
                     : "border-zinc-200 bg-white"
               }`}
             >
@@ -68,7 +68,7 @@ export function WeekPath({
               <span className="text-lg" role="img" aria-hidden>
                 {practiced ? (isBonus ? "⭐" : "✅") : (reward?.icon ?? "🎻")}
               </span>
-              <span className={`text-[10px] ${isToday ? "font-bold text-violet-700" : "text-zinc-400"}`}>
+              <span className={`text-[10px] ${isToday ? "font-bold text-plum-700" : "text-zinc-400"}`}>
                 {Number(date.slice(-2))}
               </span>
             </button>

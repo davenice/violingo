@@ -15,6 +15,7 @@ import { LivesTracker } from "@/components/child/LivesTracker";
 import { WeekPath } from "@/components/child/WeekPath";
 import { SidequestCard } from "@/components/child/SidequestCard";
 import { LastPrize } from "@/components/child/LastPrize";
+import { Mascot } from "@/components/child/Mascot";
 import { Toast, useToast } from "@/components/child/Toast";
 
 export default function ChildHomePage() {
@@ -94,11 +95,14 @@ export default function ChildHomePage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col items-center gap-4 bg-violet-50/50 p-4 pb-16">
+    <main className="flex flex-1 flex-col items-center gap-4 bg-cream p-4 pb-16">
       <header className="flex w-full max-w-md items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Hi {child.name}!</h1>
-          <p className="text-sm text-zinc-500">Keep the music going 🎻</p>
+        <div className="flex items-center gap-2">
+          <Mascot size={56} />
+          <div>
+            <h1 className="text-2xl font-bold">Hi {child.name}!</h1>
+            <p className="text-sm text-zinc-500">Keep the music going 🎻</p>
+          </div>
         </div>
         <div className="flex gap-2">
           <StreakBadge streak={child.streakState.currentStreak} />
@@ -135,7 +139,7 @@ export default function ChildHomePage() {
         rewardsByWeekday={child.settings.rewardsByWeekday}
       />
 
-      <Link href="/parent" className="mt-2 text-sm text-violet-600 underline">
+      <Link href="/parent" className="mt-2 text-sm text-plum-600 underline">
         Parent settings
       </Link>
 
