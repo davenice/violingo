@@ -1,18 +1,12 @@
 import type { NextConfig } from "next";
 
+// Static export for GitHub Pages (app is fully client-side; Firebase is the
+// backend). trailingSlash makes every route a folder/index.html, which Pages
+// serves natively. Custom headers aren't possible on Pages — the service
+// worker registration compensates with updateViaCache: "none".
 const nextConfig: NextConfig = {
-  async headers() {
-    return [
-      {
-        // The service worker must never be cached, or updates can't roll out.
-        source: "/sw.js",
-        headers: [
-          { key: "Content-Type", value: "application/javascript; charset=utf-8" },
-          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
-        ],
-      },
-    ];
-  },
+  output: "export",
+  trailingSlash: true,
 };
 
 export default nextConfig;

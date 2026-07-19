@@ -32,9 +32,11 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
-# safe to commit: fake emulator values and the fill-in template
+# safe to commit: fake emulator values, the fill-in template, and the
+# production web config (Firebase web config is public by design)
 !.env.emulator
 !.env.local.example
+!.env.production
 
 # vercel
 .vercel

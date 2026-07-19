@@ -53,6 +53,22 @@ restart.
   onboarding → PIN gate). Needs the emulators and `npm run dev:emulator`
   running, plus `npx playwright install chromium` once.
 
+## Hosting (GitHub Pages)
+
+The app is a fully client-side static export (`output: "export"` in
+`next.config.ts`), deployed to GitHub Pages at **violingo.dandr.org** by
+`.github/workflows/deploy.yml` on every push to `main` (build + tests + lint,
+then publish `out/`). `.env.production` (committed — Firebase web config is
+public by design) supplies the build-time config; `public/CNAME` pins the
+custom domain and `public/.nojekyll` stops Pages' Jekyll from dropping
+`_next/` assets.
+
+One-time setup in the GitHub repo: Settings → Pages → Source: "GitHub
+Actions", add the custom domain, enforce HTTPS — plus a DNS CNAME record
+pointing `violingo.dandr.org` at `davenice.github.io`, and the domain added
+to Firebase console → Authentication → Settings → Authorized domains (needed
+for sign-in links).
+
 ## Weekly rollover (Cloud Function)
 
 `functions/` holds a scheduled function (`weeklyRollover`, hourly) that
