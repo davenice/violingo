@@ -20,3 +20,8 @@ for (const { file, size } of targets) {
 // app/icon.png convention serve it.
 await sharp(svg, { density: 300 }).resize(64, 64).png().toFile("app/icon.png");
 console.log("wrote app/icon.png (64x64, served as favicon by Next)");
+
+// Browsers auto-request /favicon.ico regardless of link tags; a PNG stream
+// under the .ico name is accepted by all modern browsers and silences the 404.
+await sharp(svg, { density: 300 }).resize(32, 32).png().toFile("public/favicon.ico");
+console.log("wrote public/favicon.ico (32x32 PNG)");
