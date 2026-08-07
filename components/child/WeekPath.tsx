@@ -1,12 +1,10 @@
 import { weekdayIndexOfKey } from "@/lib/domain/dates";
-import type { RewardEntry } from "@/lib/firebase/schema";
 
 interface WeekPathProps {
   weekDates: string[];
   practicedDates: Set<string>;
   todayKey: string;
   target: number;
-  rewardsByWeekday: Record<string, RewardEntry>;
   onToggle: (date: string) => void;
   busy: boolean;
 }
@@ -18,7 +16,6 @@ export function WeekPath({
   practicedDates,
   todayKey,
   target,
-  rewardsByWeekday,
   onToggle,
   busy,
 }: WeekPathProps) {
@@ -46,7 +43,6 @@ export function WeekPath({
           // surplus counter); badge them so that progress is visible in place.
           const practicedIndex = practicedInOrder.indexOf(date);
           const isBonus = practiced && practicedIndex >= target;
-          const reward = rewardsByWeekday[String(weekdayIndexOfKey(date))];
 
           return (
             <button
@@ -66,7 +62,7 @@ export function WeekPath({
                 {DAY_LABELS[weekdayIndexOfKey(date)]}
               </span>
               <span className="text-lg" role="img" aria-hidden>
-                {practiced ? (isBonus ? "⭐" : "✅") : (reward?.icon ?? "🎻")}
+                {practiced ? (isBonus ? "⭐" : "✅") : "🎻"}
               </span>
               <span className={`text-[10px] ${isToday ? "font-bold text-plum-700" : "text-zinc-400"}`}>
                 {Number(date.slice(-2))}

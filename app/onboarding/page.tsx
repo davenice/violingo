@@ -6,7 +6,6 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import { getWeekStart } from "@/lib/domain/dates";
 import { hashPin } from "@/lib/domain/pin";
-import { DEFAULT_REWARDS_BY_WEEKDAY } from "@/lib/firebase/schema";
 import { useAuth } from "@/hooks/useAuth";
 import { useChild } from "@/hooks/useChild";
 
@@ -53,7 +52,6 @@ export default function OnboardingPage() {
           weeklyTarget: 3,
           livesPerSurplus: 3,
           maxLives: 3,
-          rewardsByWeekday: DEFAULT_REWARDS_BY_WEEKDAY,
         },
         streakState: {
           currentStreak: 0,

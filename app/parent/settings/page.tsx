@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useChild } from "@/hooks/useChild";
 import { Stepper } from "@/components/parent/Stepper";
-import { RewardsEditor } from "@/components/parent/RewardsEditor";
 import { Toast, useToast } from "@/components/child/Toast";
 import { updateLivesConfig, updateWeeklyTarget } from "@/lib/firebase/parentActions";
 
@@ -56,15 +55,6 @@ export default function ParentSettingsPage() {
           min={1}
           max={5}
           onChange={(v) => save(() => updateLivesConfig(childId, child.settings.livesPerSurplus, v))}
-        />
-      </section>
-
-      <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-3 font-semibold">Rewards by weekday</h2>
-        <RewardsEditor
-          childId={childId}
-          rewardsByWeekday={child.settings.rewardsByWeekday}
-          onSaved={showToast}
         />
       </section>
 

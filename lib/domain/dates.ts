@@ -71,7 +71,7 @@ export function getWeekDates(weekStart: string): string[] {
   return Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 }
 
-/** Weekday index of a day key, Monday = 0 .. Sunday = 6 (matches rewardsByWeekday). */
+/** Weekday index of a day key, Monday = 0 .. Sunday = 6. */
 export function weekdayIndexOfKey(dateKey: string): number {
   const [y, m, d] = dateKey.split("-").map(Number);
   return (new Date(Date.UTC(y, m - 1, d)).getUTCDay() + 6) % 7;

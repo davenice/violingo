@@ -1,11 +1,10 @@
 import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { db } from "./client";
-import { weekdayIndexOfKey, weekStartOfKey } from "@/lib/domain/dates";
-import type { ChildDoc, PracticeLogEntry, RewardEntry } from "./schema";
+import { weekStartOfKey } from "@/lib/domain/dates";
+import type { ChildDoc, PracticeLogEntry } from "./schema";
 
 export interface ToggleResult {
   practiced: boolean;
-  reward: RewardEntry | null;
   targetJustHit: boolean;
   sidequestStarReverted: boolean;
 }
@@ -75,11 +74,7 @@ export async function togglePracticeDay(childId: string, date: string): Promise<
     });
     const targetJustHit = practiced && prevCount < target && nextCount >= target;
 
-    const reward = practiced
-      ? (child.settings.rewardsByWeekday[String(weekdayIndexOfKey(date))] ?? null)
-      : null;
-
-    return { practiced, reward, targetJustHit, sidequestStarReverted };
+    return { practiced, targetJustHit, sidequestStarReverted };
   });
 }
 

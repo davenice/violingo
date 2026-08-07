@@ -31,15 +31,6 @@ async function seed() {
       weeklyTarget: 3,
       livesPerSurplus: 3,
       maxLives: 3,
-      rewardsByWeekday: {
-        "0": { label: "2 surprise bags", icon: "🎁" },
-        "1": { label: "3 surprise bags", icon: "🎁" },
-        "2": { label: "A toy", icon: "🧸" },
-        "3": { label: "4 surprise bags", icon: "🎁" },
-        "4": { label: "A toy", icon: "🧸" },
-        "5": { label: "Filament", icon: "🧵" },
-        "6": { label: "5 surprise bags", icon: "🎁" },
-      },
     },
     streakState: {
       currentStreak: 2,

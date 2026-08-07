@@ -2,7 +2,6 @@ import { collection, doc, updateDoc, writeBatch } from "firebase/firestore";
 import { db } from "./client";
 import { getActiveSidequestId } from "@/lib/domain/sidequests";
 import type { SidequestWithId } from "@/hooks/useSidequests";
-import type { RewardEntry } from "./schema";
 
 export async function updateWeeklyTarget(childId: string, weeklyTarget: number): Promise<void> {
   await updateDoc(doc(db, `children/${childId}`), { "settings.weeklyTarget": weeklyTarget });
@@ -16,15 +15,6 @@ export async function updateLivesConfig(
   await updateDoc(doc(db, `children/${childId}`), {
     "settings.livesPerSurplus": livesPerSurplus,
     "settings.maxLives": maxLives,
-  });
-}
-
-export async function updateRewards(
-  childId: string,
-  rewardsByWeekday: Record<string, RewardEntry>,
-): Promise<void> {
-  await updateDoc(doc(db, `children/${childId}`), {
-    "settings.rewardsByWeekday": rewardsByWeekday,
   });
 }
 

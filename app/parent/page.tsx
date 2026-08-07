@@ -23,7 +23,7 @@ export default function ParentDashboardPage() {
         <h2 className="font-semibold">Practice & lives</h2>
         <p className="mt-1 text-sm text-zinc-500">
           {child.settings.weeklyTarget}×/week target · 1 life per {child.settings.livesPerSurplus} extra
-          practices · max {child.settings.maxLives} lives · weekday rewards
+          practices · max {child.settings.maxLives} lives
         </p>
       </Link>
 

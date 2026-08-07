@@ -9,12 +9,12 @@ import { usePracticeWeek } from "@/hooks/usePracticeWeek";
 import { useSidequests } from "@/hooks/useSidequests";
 import { getDateKey, getWeekDates, weekStartOfKey } from "@/lib/domain/dates";
 import { getActiveSidequestId } from "@/lib/domain/sidequests";
+import { pickEncouragement } from "@/lib/domain/encouragement";
 import { tagSidequestForDay, togglePracticeDay } from "@/lib/firebase/practice";
 import { StreakBadge } from "@/components/child/StreakBadge";
 import { LivesTracker } from "@/components/child/LivesTracker";
 import { WeekPath } from "@/components/child/WeekPath";
 import { SidequestCard } from "@/components/child/SidequestCard";
-import { LastPrize } from "@/components/child/LastPrize";
 import { Mascot } from "@/components/child/Mascot";
 import { Toast, useToast } from "@/components/child/Toast";
 
@@ -58,8 +58,8 @@ export default function ChildHomePage() {
       const result = await togglePracticeDay(childId!, date);
       if (result.targetJustHit) {
         showToast("🎉 Weekly target hit — streak safe!");
-      } else if (result.practiced && result.reward) {
-        showToast(`You revealed: ${result.reward.label}!`);
+      } else if (result.practiced) {
+        showToast(pickEncouragement());
       } else if (result.sidequestStarReverted) {
         showToast("Practice unmarked — sidequest star returned");
       }
@@ -120,7 +120,6 @@ export default function ChildHomePage() {
         practicedDates={practicedDates}
         todayKey={todayKey}
         target={child.settings.weeklyTarget}
-        rewardsByWeekday={child.settings.rewardsByWeekday}
         onToggle={handleToggle}
         busy={busy}
       />
@@ -132,11 +131,6 @@ export default function ChildHomePage() {
         todayTaggedSidequestId={todayTaggedSidequestId}
         onTagToday={handleTagToday}
         busy={busy}
-      />
-
-      <LastPrize
-        practicedDates={weekDates.filter((d) => practicedDates.has(d))}
-        rewardsByWeekday={child.settings.rewardsByWeekday}
       />
 
       <Link href="/parent" className="mt-2 text-sm text-plum-600 underline">
