@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:rules": "firebase emulators:exec --project violingo-rules-test --only firestore \"vitest run --config vitest.rules.config.ts\"",
-    "emulators": "firebase emulators:start --project violingo-rules-test --only firestore,auth",
+    "emulators": "firebase emulators:start --project violingo-rules-test --only firestore,auth,functions",
     "seed:emulator": "node scripts/seed-emulator.mjs"
   },
   "dependencies": {

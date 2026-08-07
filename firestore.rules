@@ -24,5 +24,19 @@ service cloud.firestore {
         request.auth.uid ==
           get(/databases/$(database)/documents/children/$(childId)).data.parentId;
     }
+
+    // signInCodes/{codeHash} — device-handoff codes minted by the
+    // createSignInCode/redeemSignInCode Cloud Functions (see functions/src/signInCode.ts).
+    // Admin SDK only; no client access, not even to the requesting user's own codes.
+    match /signInCodes/{codeHash} {
+      allow read, write: if false;
+    }
+
+    // signInAttempts/{emailHash} — per-email failed-redemption counters that
+    // cap brute-forcing of the 6-digit code (see functions/src/signInCode.ts).
+    // Admin SDK only.
+    match /signInAttempts/{emailHash} {
+      allow read, write: if false;
+    }
   }
 }

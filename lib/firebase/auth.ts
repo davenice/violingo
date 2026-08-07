@@ -2,11 +2,13 @@ import {
   isSignInWithEmailLink,
   onAuthStateChanged,
   sendSignInLinkToEmail,
+  signInWithCustomToken,
   signInWithEmailLink,
   signOut as firebaseSignOut,
   type User,
 } from "firebase/auth";
-import { auth } from "./client";
+import { httpsCallable } from "firebase/functions";
+import { auth, functions } from "./client";
 
 const EMAIL_STORAGE_KEY = "violingo-signin-email";
 
@@ -30,6 +32,26 @@ export async function completeLoginWithLink(url: string, fallbackEmail?: string)
   }
   const credential = await signInWithEmailLink(auth, email, url);
   window.localStorage.removeItem(EMAIL_STORAGE_KEY);
+  return credential.user;
+}
+
+/** Mints a short code (from an already-signed-in session) that a separate storage context — e.g. an installed iOS PWA — can redeem via {@link signInWithCode}. */
+export async function createSignInCode(): Promise<{ code: string; expiresInSeconds: number }> {
+  const call = httpsCallable<void, { code: string; expiresInSeconds: number }>(
+    functions,
+    "createSignInCode",
+  );
+  const { data } = await call();
+  return data;
+}
+
+export async function signInWithCode(code: string, email: string): Promise<User> {
+  const call = httpsCallable<{ code: string; email: string }, { token: string }>(
+    functions,
+    "redeemSignInCode",
+  );
+  const { data } = await call({ code, email });
+  const credential = await signInWithCustomToken(auth, data.token);
   return credential.user;
 }
 

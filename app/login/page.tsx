@@ -2,10 +2,16 @@
 
 import { useEffect, useState, useSyncExternalStore, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { completeLoginWithLink, isLoginLink, sendLoginLink } from "@/lib/firebase/auth";
+import {
+  completeLoginWithLink,
+  isLoginLink,
+  sendLoginLink,
+  signInWithCode,
+} from "@/lib/firebase/auth";
 import { useAuth } from "@/hooks/useAuth";
 
 type Status = "idle" | "sending" | "sent" | "completing" | "error";
+type Mode = "link" | "code";
 
 const emptySubscribe = () => () => {};
 
@@ -30,6 +36,8 @@ export default function LoginPage() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
   const [needsEmail, setNeedsEmail] = useState(false);
+  const [mode, setMode] = useState<Mode>("link");
+  const [code, setCode] = useState("");
 
   useEffect(() => {
     if (!loading && user) router.replace("/");
@@ -76,6 +84,30 @@ export default function LoginPage() {
     }
   }
 
+  async function handleCodeSubmit(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setStatus("completing");
+    try {
+      await signInWithCode(code, email);
+      router.replace("/");
+    } catch (err) {
+      // The redeemSignInCode function returns "resource-exhausted" once the
+      // code is cancelled after too many wrong attempts — show its message so
+      // the user knows to generate a fresh code rather than keep retrying.
+      const locked =
+        typeof err === "object" &&
+        err !== null &&
+        (err as { code?: string }).code === "functions/resource-exhausted";
+      setError(
+        locked
+          ? (err as { message: string }).message
+          : "That code is invalid or has expired. Generate a new one in Settings.",
+      );
+      setStatus("error");
+    }
+  }
+
   if (status === "sent") {
     return (
       <main className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
@@ -95,6 +127,56 @@ export default function LoginPage() {
     return (
       <main className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
         <h1 className="text-2xl font-semibold">Signing you in…</h1>
+      </main>
+    );
+  }
+
+  if (mode === "code" && !needsEmail) {
+    return (
+      <main className="flex flex-1 flex-col items-center justify-center gap-6 p-8">
+        <h1 className="text-2xl font-semibold">Enter your sign-in code</h1>
+        <p className="max-w-sm text-center text-sm text-zinc-600">
+          Generate one from Settings while signed in elsewhere.
+        </p>
+        <form onSubmit={handleCodeSubmit} className="flex w-full max-w-sm flex-col gap-3">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            className="rounded-lg border border-zinc-300 px-4 py-2"
+          />
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="\d{6}"
+            required
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="123456"
+            className="rounded-lg border border-zinc-300 px-4 py-2 text-center font-mono text-lg tracking-widest"
+          />
+          <button
+            type="submit"
+            disabled={status === "completing"}
+            className="rounded-lg bg-plum-600 px-4 py-2 font-medium text-white disabled:opacity-50"
+          >
+            Sign in
+          </button>
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          <button
+            type="button"
+            onClick={() => {
+              setMode("link");
+              setError(null);
+              setStatus("idle");
+            }}
+            className="text-sm text-plum-600 underline"
+          >
+            Use an email link instead
+          </button>
+        </form>
       </main>
     );
   }
@@ -121,6 +203,19 @@ export default function LoginPage() {
           {needsEmail ? "Confirm and sign in" : "Email me a sign-in link"}
         </button>
         {error && <p className="text-sm text-red-600">{error}</p>}
+        {!needsEmail && (
+          <button
+            type="button"
+            onClick={() => {
+              setMode("code");
+              setError(null);
+              setStatus("idle");
+            }}
+            className="text-sm text-plum-600 underline"
+          >
+            Have a sign-in code instead?
+          </button>
+        )}
       </form>
     </main>
   );
