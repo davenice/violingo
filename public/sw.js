@@ -2,7 +2,7 @@
 // IndexedDB cache, so this only needs to keep the shell loadable offline:
 // network-first for navigations (with cached fallback), cache-first for
 // hashed static assets. Cross-origin requests (Firebase APIs) are untouched.
-const CACHE_NAME = "violingo-shell-v2";
+const CACHE_NAME = "violingo-shell-v3";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());
@@ -29,8 +29,10 @@ self.addEventListener("fetch", (event) => {
       (async () => {
         try {
           const response = await fetch(request);
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(request, response.clone());
+          if (response.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(request, response.clone());
+          }
           return response;
         } catch {
           const cached = await caches.match(request);
@@ -48,8 +50,10 @@ self.addEventListener("fetch", (event) => {
         const cached = await caches.match(request);
         if (cached) return cached;
         const response = await fetch(request);
-        const cache = await caches.open(CACHE_NAME);
-        cache.put(request, response.clone());
+        if (response.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(request, response.clone());
+        }
         return response;
       })(),
     );
