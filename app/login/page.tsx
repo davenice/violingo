@@ -92,17 +92,18 @@ export default function LoginPage() {
       await signInWithCode(code, email);
       router.replace("/");
     } catch (err) {
-      // The redeemSignInCode function returns "resource-exhausted" once the
-      // code is cancelled after too many wrong attempts — show its message so
-      // the user knows to generate a fresh code rather than keep retrying.
-      const locked =
-        typeof err === "object" &&
-        err !== null &&
-        (err as { code?: string }).code === "functions/resource-exhausted";
+      // redeemSignInCode returns a specific, user-facing message for each
+      // failure (expired, wrong email, cancelled after too many attempts).
+      // Show it rather than a catch-all, so "wrong email" doesn't read as
+      // "bad code" and the user knows whether retrying will help. Falls back
+      // to a generic line only for unexpected/transport errors.
+      const fnError = err as { code?: string; message?: string } | null;
+      const isCallableError = typeof fnError?.code === "string" && fnError.code.startsWith("functions/");
+      console.error("Sign-in code redemption failed", fnError?.code, fnError?.message);
       setError(
-        locked
-          ? (err as { message: string }).message
-          : "That code is invalid or has expired. Generate a new one in Settings.",
+        isCallableError && fnError?.message
+          ? fnError.message
+          : "Couldn't sign you in with that code. Generate a new one in Settings and try again.",
       );
       setStatus("error");
     }

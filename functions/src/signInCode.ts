@@ -31,6 +31,10 @@ interface AttemptDoc {
   windowExpiresAt: FirebaseFirestore.Timestamp;
 }
 
+type Verdict =
+  | { ok: true; uid: string }
+  | { ok: false; reason: "NOT_FOUND" | "EXPIRED" | "EMAIL_MISMATCH" | "LOCKED" };
+
 /**
  * Mints a short-lived code that resolves to `uid` and stores only its hash,
  * keyed by that hash — so a lookup requires knowing the code, not scanning
@@ -76,7 +80,11 @@ export async function resolveSignInCode(db: Firestore, code: string, email: stri
   const attemptRef = db.collection("signInAttempts").doc(attemptDocId(normalizedEmail));
   const codesForEmail = db.collection("signInCodes").where("email", "==", normalizedEmail);
 
-  return db.runTransaction(async (tx) => {
+  // The transaction *returns* its verdict rather than throwing it: throwing
+  // from a runTransaction callback aborts the transaction, which would roll
+  // back the very attempt-counter write the lockout depends on. Failures are
+  // raised after the transaction has committed.
+  const result = await db.runTransaction<Verdict>(async (tx) => {
     const now = Date.now();
 
     // All reads must precede all writes within the transaction.
@@ -91,7 +99,7 @@ export async function resolveSignInCode(db: Firestore, code: string, email: stri
       }
     }
     if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
-      throw new Error("LOCKED");
+      return { ok: false, reason: "LOCKED" };
     }
 
     // Classify the attempt from the (already-read) snapshots.
@@ -118,12 +126,12 @@ export async function resolveSignInCode(db: Firestore, code: string, email: stri
     if (outcome === "OK") {
       tx.delete(codeRef);
       tx.delete(attemptRef);
-      return uid;
+      return { ok: true, uid };
     }
 
     if (outcome === "EXPIRED") {
       tx.delete(codeRef);
-      throw new Error("EXPIRED");
+      return { ok: false, reason: "EXPIRED" };
     }
 
     // Wrong code or wrong email — burn an attempt against this email.
@@ -131,19 +139,23 @@ export async function resolveSignInCode(db: Firestore, code: string, email: stri
     if (nextFailed >= MAX_FAILED_ATTEMPTS) {
       // Too many — cancel any live code issued for this email so the whole
       // handoff must be restarted, and keep the email locked for the window.
+      // This read must happen before the writes below.
       const outstanding = await tx.get(codesForEmail);
       outstanding.forEach((doc) => tx.delete(doc.ref));
       tx.set(attemptRef, {
         failedAttempts: nextFailed,
         windowExpiresAt: new Date(now + CODE_TTL_MS),
       });
-      throw new Error("LOCKED");
+      return { ok: false, reason: "LOCKED" };
     }
 
     tx.set(attemptRef, {
       failedAttempts: nextFailed,
       windowExpiresAt: new Date(now + CODE_TTL_MS),
     });
-    throw new Error(outcome);
+    return { ok: false, reason: outcome };
   });
+
+  if (!result.ok) throw new Error(result.reason);
+  return result.uid;
 }
